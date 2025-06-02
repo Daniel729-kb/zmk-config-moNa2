@@ -12,7 +12,44 @@
 };
 
 / {
-    combos { compatible = "zmk,combos"; };
+    combos {
+        compatible = "zmk,combos";
+
+        BS {
+            bindings = <&kp BACKSPACE>;
+            key-positions = <8 9>;
+        };
+
+        ENT {
+            bindings = <&kp ENTER>;
+            key-positions = <21 20>;
+        };
+
+        ES {
+            bindings = <&kp ESCAPE>;
+            key-positions = <1 0>;
+        };
+
+        TA {
+            bindings = <&kp TAB>;
+            key-positions = <11 10>;
+        };
+
+        ZZ {
+            bindings = <&kp LS(Z)>;
+            key-positions = <34 35>;
+        };
+
+        EQL {
+            bindings = <&kp EQUAL>;
+            key-positions = <8 7>;
+        };
+
+        COM {
+            bindings = <&kp COLON>;
+            key-positions = <20 19>;
+        };
+    };
 
     macros {
         to_layer_0: to_layer_0 {
