@@ -89,10 +89,10 @@
 
         default_layer {
             bindings = <
-&kp Q             &kp W         &kp E             &kp R             &kp T                                          &kp Y        &kp U  &lt 5 I    &kp O    &kp P
-&kp A             &kp S         &kp D             &kp F             &kp G        &trans         &kp DOUBLE_QUOTES  &kp H        &kp J  &kp K      &kp L    &kp MINUS
-&mt LEFT_SHIFT Z  &kp X         &kp C             &kp V             &kp B        &kp AT_SIGN    &kp COLON          &kp N        &kp M  &kp COMMA  &kp DOT  &mt RSHFT SLASH
-&kp LEFT_ALT      &kp LEFT_WIN  &kp LEFT_CONTROL  &lt 4 INT_HENKAN  &lt 2 SPACE  &lt 3 CAPS     &lt 2 SPACE        &lt 1 ENTER                             &kp DEL
+&kp Q             &kp W         &kp E             &kp R             &kp T                                    &kp Y        &kp U  &lt 5 I    &kp O    &kp P
+&kp A             &kp S         &kp D             &kp F             &kp G        &trans         &tog 6       &kp H        &kp J  &kp K      &kp L    &kp MINUS
+&mt LEFT_SHIFT Z  &kp X         &kp C             &kp V             &kp B        &kp AT_SIGN    &kp COLON    &kp N        &kp M  &kp COMMA  &kp DOT  &mt RSHFT SLASH
+&kp LEFT_ALT      &kp LEFT_WIN  &kp LEFT_CONTROL  &lt 4 INT_HENKAN  &lt 2 SPACE  &lt 3 CAPS     &lt 2 SPACE  &lt 1 ENTER                             &kp DEL
             >;
 
             sensor-bindings =
@@ -114,7 +114,7 @@
         layer_2 {
             bindings = <
 &kp NUMBER_1      &kp NUMBER_2      &kp NUMBER_3      &kp NUMBER_4      &kp NUMBER_5                            &kp NUMBER_6      &kp NUMBER_7       &kp NUMBER_8      &kp NUMBER_9      &kp NUMBER_0
-&kp LS(NUMBER_1)  &kp LS(NUMBER_2)  &kp LS(NUMBER_3)  &kp LS(NUMBER_4)  &kp LS(NUMBER_5)  &trans      &trans    &kp RS(NUMBER_6)  &kp RS(NUMBER_7)   &kp RS(NUMBER_8)  &kp RS(NUMBER_9)  &kp RS(NUMBER_0)
+&kp LS(NUMBER_1)  &kp LS(NUMBER_2)  &kp LS(NUMBER_3)  &kp LS(NUMBER_4)  &kp LS(NUMBER_5)  &trans      &kp DQT   &kp RS(NUMBER_6)  &kp RS(NUMBER_7)   &kp RS(NUMBER_8)  &kp RS(NUMBER_9)  &kp RS(NUMBER_0)
 &trans            &trans            &trans            &trans            &trans            &kp LBKT    &kp RBKT  &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp LEFT_BRACE    &kp RIGHT_BRACE   &kp BACKSLASH
 &trans            &trans            &trans            &trans            &trans            &trans      &trans    &trans                                                                   &kp PIPE
             >;
@@ -158,7 +158,7 @@
         MOUSE {
             bindings = <
 &trans  &trans  &trans  &trans  &trans                    &trans  &trans    &mo 6     &trans    &trans
-&trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &mkp MB1  &mkp MB3  &mkp MB2  &trans
+&trans  &trans  &trans  &trans  &trans  &trans    &to 0   &trans  &mkp MB1  &mkp MB3  &mkp MB2  &trans
 &trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans    &trans    &trans    &trans
 &trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans                                &trans
             >;
