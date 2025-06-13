@@ -75,18 +75,19 @@
             tapping-term-ms = <200>;
         };
 
-        // Behavior for switching layers and retaining scroll functionality
-        rotate_layer_and_scroll: behavior_sensor_rotate {
+        scroll_up_down: behavior_sensor_rotate_mouse_wheel_up_down {
             compatible = "zmk,behavior-sensor-rotate";
-            bindings = <&to MOUSE>, <&to 0>; // Clockwise to mouse layer, counterclockwise to default layer
-            secondary-bindings = <&msc SCRL_UP>, <&msc SCRL_DOWN>; // Scroll functionality
+            #sensor-binding-cells = <0>;
+            bindings = <&msc SCRL_UP>, <&msc SCRL_DOWN>;
+
+            tap-ms = <20>;
         };
     };
 
     keymap {
         compatible = "zmk,keymap";
 
-       default_layer {
+        default_layer {
             bindings = <
 &kp Q             &kp W         &kp E             &kp R             &kp T                                    &kp Y        &kp U  &lt 6 I    &kp O    &kp P
 &kp A             &kp S         &kp D             &kp F             &kp G        &trans         &tog 6       &kp H        &kp J  &kp K      &kp L    &kp MINUS
@@ -95,7 +96,8 @@
             >;
 
             sensor-bindings =
-                <&rotate_layer_and_scroll>; // Bind rotary encoder to combined behavior
+                <&scroll_up_down>,
+                <&inc_dec_kp C_VOL_DN C_VOL_UP>;
         };
 
         layer_1 {
@@ -106,8 +108,7 @@
 &trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans                          &kp F12
             >;
 
-            sensor-bindings =
-                <&rotate_layer_and_scroll>; // Bind rotary encoder to combined behavior
+            sensor-bindings = <&scroll_up_down>;
         };
 
         layer_2 {
@@ -118,8 +119,7 @@
 &trans            &trans            &trans            &trans            &trans            &trans      &trans    &trans                                                                   &kp PIPE
             >;
 
-            sensor-bindings =
-                <&rotate_layer_and_scroll>; // Bind rotary encoder to combined behavior
+            sensor-bindings = <&scroll_up_down>;
         };
 
         layer_3 {
@@ -130,8 +130,7 @@
 &trans          &trans                  &trans          &trans                   &trans   &trans    &trans  &trans                          &kp DOWN
             >;
 
-            sensor-bindings =
-                <&rotate_layer_and_scroll>; // Bind rotary encoder to combined behavior
+            sensor-bindings = <&scroll_up_down>;
         };
 
         layer_4 {
@@ -142,8 +141,7 @@
 &trans  &trans  &trans  &trans  &trans  &trans         &trans       &trans                                                  &bt BT_CLR_ALL
             >;
 
-            sensor-bindings =
-                <&rotate_layer_and_scroll>; // Bind rotary encoder to combined behavior
+            sensor-bindings = <&scroll_up_down>;
         };
 
         MOUSE {
@@ -154,7 +152,7 @@
 &trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans                                     &trans
             >;
 
-            sensor-bindings = <&rotate_layer_and_scroll>; // Ensure mouse layer supports combined behavior
+            sensor-bindings = <&scroll_up_down>;
         };
 
         layer_6 {
@@ -165,8 +163,7 @@
 &trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans                          &trans
             >;
 
-            sensor-bindings =
-                <&rotate_layer_and_scroll>; // Bind rotary encoder to combined behavior
+            sensor-bindings = <&scroll_up_down>;
         };
     };
 };
