@@ -19,16 +19,7 @@
     /omit-if-no-ref/ zip_temp_layer: zip_temp_layer {
         compatible = "zmk,input-processor-temp-layer";
         #input-processor-cells = <2>;
-        excluded-positions = 
-            6   // &mkp MB1 (mouse button 1)
-            7   // &mkp MB3 (mouse button 3) 
-            8   // &mo 6 (scroll layer access)
-            9   // &mkp MB2 (mouse button 2)
-            18  // &mkp MB1
-            19  // &mo 6 (scroll layer access)
-            20  // &mkp MB2
-            30  // &mkp MB1
-        >;
+        excluded-positions = <6, 7, 8, 9, 18, 19, 20, 30>;
     };
 
     trackball_listener {
@@ -71,7 +62,6 @@
         reg = <0>;
         spi-max-frequency = <2000000>;
         irq-gpios = <&gpio0 2 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-        // #automouse-layer = <5>;  // DISABLED - using Input Processor instead
         scroll-layers = <6>;
     };
 };
