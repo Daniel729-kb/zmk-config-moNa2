@@ -90,7 +90,7 @@
         default_layer {
             bindings = <
 &kp Q             &kp W         &kp E             &kp R             &kp T                                    &kp Y        &kp U  &lt 6 I    &kp O    &kp P
-&kp A             &kp S         &kp D             &kp F             &kp G        &trans         &tog 6       &kp H        &kp J  &kp K      &kp L    &kp MINUS
+&kp A             &kp S         &kp D             &kp F             &kp G        &trans         &tog 5       &kp H        &kp J  &kp K      &kp L    &kp MINUS
 &mt LEFT_SHIFT Z  &kp X         &kp C             &kp V             &kp B        &kp AT_SIGN    &kp COLON    &kp N        &kp M  &kp COMMA  &kp DOT  &mt RSHFT SLASH
 &kp LEFT_ALT      &kp LEFT_WIN  &kp LEFT_CONTROL  &lt 4 INT_HENKAN  &lt 2 SPACE  &lt 3 CAPS     &lt 2 SPACE  &lt 1 ENTER                             &kp DEL
             >;
@@ -113,10 +113,10 @@
 
         layer_2 {
             bindings = <
-&kp NUMBER_1      &kp NUMBER_2      &kp NUMBER_3      &kp NUMBER_4      &kp NUMBER_5                            &kp NUMBER_6      &kp NUMBER_7       &kp NUMBER_8      &kp NUMBER_9      &kp NUMBER_0
-&kp LS(NUMBER_1)  &kp LS(NUMBER_2)  &kp LS(NUMBER_3)  &kp LS(NUMBER_4)  &kp LS(NUMBER_5)  &trans      &kp DQT   &kp RS(NUMBER_6)  &kp RS(NUMBER_7)   &kp RS(NUMBER_8)  &kp RS(NUMBER_9)  &kp RS(NUMBER_0)
-&trans            &trans            &trans            &trans            &trans            &kp LBKT    &kp RBKT  &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp LEFT_BRACE    &kp RIGHT_BRACE   &kp BACKSLASH
-&trans            &trans            &trans            &trans            &trans            &trans      &trans    &trans                                                                   &kp PIPE
+&kp NUMBER_1      &kp NUMBER_2      &kp NUMBER_3      &kp NUMBER_4      &kp NUMBER_5                                  &kp NUMBER_6      &kp NUMBER_7       &kp NUMBER_8      &kp NUMBER_9      &kp NUMBER_0
+&kp LS(NUMBER_1)  &kp LS(NUMBER_2)  &kp LS(NUMBER_3)  &kp LS(NUMBER_4)  &kp LS(NUMBER_5)  &trans    &kp LEFT_BRACKET  &kp RS(NUMBER_6)  &kp RS(NUMBER_7)   &kp RS(NUMBER_8)  &kp RS(NUMBER_9)  &kp RS(NUMBER_0)
+&trans            &trans            &trans            &trans            &trans            &trans    &kp RBKT          &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp LEFT_BRACE    &kp RIGHT_BRACE   &kp BACKSLASH
+&trans            &trans            &trans            &trans            &trans            &trans    &trans            &trans                                                                   &kp PIPE
             >;
 
             sensor-bindings = <&scroll_up_down>;
@@ -146,10 +146,10 @@
 
         MOUSE {
             bindings = <
-&trans  &trans  &trans  &trans  &trans                      &trans  &mkp MB1  &mkp MB3    &mo 6  &mkp MB2
-&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &mkp MB1  &mo 6  &mkp MB2   &trans
-&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &mkp MB1  &trans      &trans      &trans
-&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans                                     &trans
+&trans  &trans  &trans  &trans  &trans                    &trans  &trans    &mkp MB3  &mkp MB2  &trans
+&trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &mkp MB1  &mo 6     &mkp MB2  &trans
+&trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &mkp MB1  &trans    &trans    &trans
+&trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans                                &trans
             >;
 
             sensor-bindings = <&scroll_up_down>;
