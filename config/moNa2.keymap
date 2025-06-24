@@ -3,125 +3,286 @@
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/pointing.h>
 
-#define ZMK_POINTING_DEFAULT_SCRL_VAL 100
-#define MOUSE 6
+#define DEFAULT_WIN 0
+#define DEFAULT_MAC 1
+#define NUM_WIN 2
+#define NUM_MAC 3
+#define SYMBOL_WIN 4
+#define SYMBOL_MAC 5
+#define FUNC_SCROLL_WIN 6
+#define FUNC_SCROLL_MAC 7
+#define AML 8
+#define KBD_SETTING 9
+
+// Trackball settings
+#define ZMK_POINTING_DEFAULT_SCRL_VAL 120
+
+// Mouse behavior settings
+&mmv {
+    delay-ms = <20>;
+    trigger-period-ms = <5>;
+    time-to-max-speed-ms = <200>;
+};
+
+&msc {
+    delay-ms = <3>;
+    trigger-period-ms = <3>;
+    time-to-max-speed-ms = <200>;
+};
 
 &mt {
     flavor = "balanced";
-    quick-tap-ms = <0>;
+    tapping-term-ms = <180>;
+    quick-tap-ms = <180>;
+    hold-while-undecided;
+};
+
+&lt {
+    flavor = "balanced";
+    tapping-term-ms = <180>;
+    quick-tap-ms = <180>;
+    hold-while-undecided;
 };
 
 / {
-    combos { compatible = "zmk,combos"; };
-
-    macros {
-        to_layer_0: to_layer_0 {
-            compatible = "zmk,behavior-macro-one-param";
-            #binding-cells = <1>;
-            bindings = <&to 0 &macro_param_1to1 &kp MACRO_PLACEHOLDER>;
-            label = "TO_LAYER_0";
+    // Enhanced combos
+    combos {
+        compatible = "zmk,combos";
+        
+        tab {
+            bindings = <&kp TAB>;
+            key-positions = <11 10>;
+        };
+        
+        alt_tab {
+            bindings = <&kp LA(TAB)>;
+            key-positions = <11 12>;
+        };
+        
+        enter_combo {
+            bindings = <&kp ENTER>;
+            key-positions = <20 21>;
+        };
+        
+        equals {
+            bindings = <&kp EQUAL>;
+            key-positions = <8 7>;
+        };
+        
+        escape {
+            bindings = <&kp ESCAPE>;
+            key-positions = <1 0>;
+        };
+        
+        shift_z {
+            bindings = <&kp LS(Z)>;
+            key-positions = <22 23>;
+        };
+        
+        question_mark {
+            bindings = <&kp RS(SLASH)>;
+            key-positions = <33 32>;
+        };
+        
+        bs {
+            bindings = <&kp BSPC>;
+            key-positions = <9 8>;
         };
     };
 
-    behaviors {
-        lt_to_layer_0: lt_to_layer_0 {
-            compatible = "zmk,behavior-hold-tap";
-            label = "LAYER_TAP_TO_0";
-            bindings = <&mo>, <&to_layer_0>;
-
-            #binding-cells = <2>;
-            tapping-term-ms = <200>;
+    // Advanced macros for platform switching
+    macros {
+        bt0_win: bt0 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings =
+                <&tog_off 1>,
+                <&macro_wait_time 200>,
+                <&bt BT_SEL 0 &bt BT_DISC 1 &bt BT_DISC 2 &bt BT_DISC 3 &bt BT_DISC 4>;
+            label = "BT0";
         };
 
-        scroll_up_down: behavior_sensor_rotate_mouse_wheel_up_down {
+        bt1_mac: bt1 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings =
+                <&tog_off 1>,
+                <&macro_wait_time 200>,
+                <&bt BT_SEL 1 &bt BT_DISC 0 &bt BT_DISC 2 &bt BT_DISC 3 &bt BT_DISC 4>,
+                <&macro_wait_time 500>,
+                <&tog_on 1>;
+            label = "BT1";
+        };
+
+        // AML exit macros
+        exit_AML: exit_AML {
+            compatible = "zmk,behavior-macro";
+            wait-ms = <0>;
+            tap-ms = <0>;
+            #binding-cells = <0>;
+            bindings = <&tog_off AML>;
+            label = "exit_AML";
+        };
+
+        kp_exit_AML: kp_exit_AML {
+            compatible = "zmk,behavior-macro-one-param";
+            wait-ms = <0>;
+            tap-ms = <0>;
+            #binding-cells = <1>;
+            bindings = <&macro_param_1to1 &kp MACRO_PLACEHOLDER &exit_AML>;
+            label = "KP_exit_AML";
+        };
+    };
+
+    // Advanced behaviors
+    behaviors {
+        // Platform switching toggles
+        tog_on: toggle_layer_on_only {
+            compatible = "zmk,behavior-toggle-layer";
+            #binding-cells = <1>;
+            display-name = "Toggle Layer On";
+            toggle-mode = "on";
+        };
+
+        tog_off: toggle_layer_off_only {
+            compatible = "zmk,behavior-toggle-layer";
+            #binding-cells = <1>;
+            display-name = "Toggle Layer Off";
+            toggle-mode = "off";
+        };
+
+        // AML exit behavior for tap
+        mt_exit_AML_on_tap: mt_exit_AML_on_tap {
+            compatible = "zmk,behavior-hold-tap";
+            label = "MT_exit_AML_ON_TAP";
+            bindings = <&kp>, <&kp_exit_AML>;
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            flavor = "balanced";
+            quick-tap-ms = <200>;
+        };
+
+        // Enhanced encoder behaviors for scrolling
+        encoder_msc_up_down: encoder_msc_up_down {
             compatible = "zmk,behavior-sensor-rotate";
+            label = "ENCODER_MSC_UP_DOWN";
             #sensor-binding-cells = <0>;
             bindings = <&msc SCRL_UP>, <&msc SCRL_DOWN>;
-
             tap-ms = <20>;
+        };
+
+        // Space and shift behavior
+        sands: space_and_shift {
+            compatible = "zmk,behavior-hold-tap";
+            label = "SPACE_AND_SHIFT";
+            #binding-cells = <2>;
+            flavor = "tap-unless-interrupted";
+            tapping-term-ms = <220>;
+            quick-tap-ms = <125>;
+            global-quick-tap;
+            bindings = <&kp>, <&kp>;
         };
     };
 
     keymap {
         compatible = "zmk,keymap";
 
-        default_layer {
+        DEFAULT_WIN {
             bindings = <
-&kp Q             &kp W         &kp E         &kp R             &kp T                                             &kp Y        &kp U  &lt 5 I    &kp O    &kp P
-&kp A             &kp S         &kp D         &kp F             &kp G        &trans                &kp MINUS      &kp H        &kp J  &kp K      &kp L    &kp SQT
-&mt LEFT_SHIFT Z  &kp X         &kp C         &kp V             &kp B        &lt 4 COLON           &kp SEMICOLON  &kp N        &kp M  &kp COMMA  &kp DOT  &kp SLASH
-&kp LCTRL         &kp LEFT_WIN  &kp LEFT_ALT  &lt 1 INT_HENKAN  &lt 2 SPACE  &lt 3 INT_MUHENKAN    &kp BACKSPACE  &lt 1 ENTER                             &kp DEL
+&kp Q             &kp W         &kp E      &kp R                   &kp T                                                                            &kp Y                      &kp U  &lt FUNC_SCROLL_WIN I  &kp O    &kp P
+&mt LCTRL A       &mt LCTRL S   &kp D      &kp F                   &kp G                     &kp LG(LS(S))                       &kp EQUAL          &kp H                      &kp J  &kp K                  &kp L    &kp MINUS
+&mt LEFT_SHIFT Z  &kp X         &kp C      &kp V                   &kp B                     &kp AT                              &kp SEMI           &kp N                      &kp M  &kp COMMA              &kp DOT  &kp SLASH
+&kp LALT          &kp LEFT_GUI  &kp LCTRL  &lt KBD_SETTING ESCAPE  &sands LSHIFT SPACE       &lt SYMBOL_WIN CAPS                 &lt NUM_WIN SPACE  &lt FUNC_SCROLL_WIN ENTER                                         &kp DEL
             >;
-
-            sensor-bindings =
-                <&scroll_up_down>,
-                <&inc_dec_kp C_VOL_DN C_VOL_UP>;
+            sensor-bindings = <&encoder_msc_up_down>;
         };
 
-        layer_1 {
+        DEFAULT_MAC {
             bindings = <
-&trans  &trans  &trans  &trans  &trans                    &kp F1  &kp F2  &kp F3  &kp F4  &kp F5
-&trans  &trans  &trans  &trans  &trans  &trans    &trans  &kp F6  &kp F7  &kp F8  &kp F9  &kp F10
-&trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans  &kp F11
-&trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans                          &kp F12
+&kp Q             &kp W        &kp E         &kp R                   &kp T                                                                            &kp Y                      &kp U  &lt FUNC_SCROLL_MAC I  &kp O    &kp P
+&mt LCTRL A       &mt LCTRL S  &kp D         &kp F                   &kp G                     &kp LG(LS(S))                       &kp EQUAL          &kp H                      &kp J  &kp K                  &kp L    &kp MINUS
+&mt LEFT_SHIFT Z  &kp X        &kp C         &kp V                   &kp B                     &kp AT                              &kp SEMI           &kp N                      &kp M  &kp COMMA              &kp DOT  &kp SLASH
+&kp LCTRL         &kp LALT     &kp LEFT_GUI  &lt KBD_SETTING ESCAPE  &sands LSHIFT SPACE       &lt SYMBOL_MAC CAPS                 &lt NUM_MAC SPACE  &lt FUNC_SCROLL_MAC ENTER                                         &mt RIGHT_SHIFT DELETE
             >;
-
-            sensor-bindings = <&scroll_up_down>;
+            sensor-bindings = <&encoder_msc_up_down>;
         };
 
-        layer_2 {
+        NUM_WIN {
             bindings = <
-&kp MINUS                   &kp KP_NUMBER_7  &kp KP_NUMBER_8  &kp KP_NUMBER_9  &kp PLUS                                                 &kp CARET         &kp AMPERSAND      &kp TILDE       &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS
-&kp SLASH                   &kp KP_NUMBER_4  &kp KP_NUMBER_5  &kp KP_NUMBER_6  &kp ASTERISK  &kp LC(LA(KP_NUMBER_0))    &kp UNDERSCORE  &kp EXCLAMATION   &kp AT_SIGN        &kp HASH        &kp DOLLAR            &kp PERCENT
-&mt LEFT_SHIFT KP_NUMBER_0  &kp KP_NUMBER_1  &kp KP_NUMBER_2  &kp KP_NUMBER_3  &kp PERIOD    &kp EQUAL                  &trans          &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp LEFT_BRACE  &kp RIGHT_BRACE       &kp BACKSLASH
-&trans                      &trans           &trans           &trans           &trans        &trans                     &trans          &trans                                                                     &kp PIPE
+&kp NUMBER_1  &kp NUMBER_2  &kp NUMBER_3  &kp NUMBER_4  &kp N5                         &kp NUMBER_6  &kp NUMBER_7  &kp N8     &kp NUMBER_9  &kp NUMBER_0
+&kp EXCL      &kp AT        &kp POUND     &kp DLLR      &kp PRCNT  &trans      &trans  &kp CARET     &kp AMPS      &kp STAR   &kp LPAR      &kp RPAR
+&kp F11       &kp F12       &trans        &trans        &trans     &trans      &trans  &trans        &trans        &kp COLON  &kp DQT       &kp UP_ARROW
+&trans        &trans        &trans        &trans        &trans     &trans      &trans  &trans                                               &kp DOWN_ARROW
             >;
-
-            sensor-bindings = <&scroll_up_down>;
+            sensor-bindings = <&encoder_msc_up_down>;
         };
 
-        layer_3 {
+        NUM_MAC {
             bindings = <
-&kp ESCAPE      &kp LC(LS(TAB))         &kp UP_ARROW    &kp LC(TAB)              &trans                     &trans  &trans  &trans  &trans  &trans
-&kp HOME        &kp LEFT_ARROW          &kp DOWN_ARROW  &kp RIGHT_ARROW          &kp END  &trans    &trans  &trans  &trans  &trans  &trans  &trans
-&kp LEFT_SHIFT  &kp LG(LS(LEFT_ARROW))  &trans          &kp LG(LS(RIGHT_ARROW))  &trans   &trans    &trans  &trans  &trans  &trans  &trans  &trans
-&trans          &trans                  &trans          &trans                   &trans   &trans    &trans  &trans                          &trans
+&kp NUMBER_1  &kp NUMBER_2  &kp NUMBER_3  &kp NUMBER_4  &kp N5                         &kp NUMBER_6  &kp NUMBER_7  &kp N8     &kp NUMBER_9  &kp NUMBER_0
+&kp EXCL      &kp AT        &kp POUND     &kp DLLR      &kp PRCNT  &trans      &trans  &kp CARET     &kp AMPS      &kp STAR   &kp LPAR      &kp RPAR
+&kp F11       &kp F12       &trans        &trans        &trans     &trans      &trans  &trans        &trans        &kp COLON  &kp DQT       &kp UP_ARROW
+&trans        &trans        &trans        &trans        &trans     &trans      &trans  &trans                                               &kp DOWN_ARROW
             >;
-
-            sensor-bindings = <&scroll_up_down>;
+            sensor-bindings = <&inc_dec_kp LEFT RIGHT>;
         };
 
-        layer_4 {
+        SYMBOL_WIN {
             bindings = <
-&trans  &trans  &trans  &trans  &trans                         &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4
-&trans  &trans  &trans  &trans  &trans  &trans    &trans       &trans        &trans        &trans        &trans        &trans
-&trans  &trans  &trans  &trans  &trans  &trans    &bootloader  &trans        &trans        &trans        &trans        &bt BT_CLR
-&trans  &trans  &trans  &trans  &trans  &trans    &trans       &trans                                                  &bt BT_CLR_ALL
+&kp SQT      &kp DOUBLE_QUOTES  &kp EXCLAMATION   &kp QUESTION      &kp TILDE                                              &kp BACKSLASH  &kp LEFT_BRACE        &kp RIGHT_BRACE        &trans    &kp PERCENT
+&kp AT_SIGN  &kp SEMICOLON      &kp DOLLAR        &kp LESS_THAN     &kp GREATER_THAN  &trans              &kp ESCAPE       &kp HASH       &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp PIPE  &kp EQUAL
+&trans       &kp ASTERISK       &kp COLON         &kp CARET         &kp GRAVE         &kp LEFT_BRACE      &kp RIGHT_BRACE  &kp AMPERSAND  &kp LEFT_BRACKET      &kp RIGHT_BRACKET      &trans    &kp SLASH
+&trans       &trans             &kp LS(LEFT_GUI)  &kp LS(LEFT_ALT)  &kp LS(LCTRL)     &trans              &trans           &trans                                                                &trans
             >;
-
-            sensor-bindings = <&scroll_up_down>;
+            sensor-bindings = <&encoder_msc_up_down>;
         };
 
-        layer_5 {
+        SYMBOL_MAC {
             bindings = <
-&trans  &trans  &trans  &trans  &trans                    &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans                          &trans
+&kp SQT      &kp DOUBLE_QUOTES  &kp EXCLAMATION  &kp QUESTION      &kp TILDE                                              &kp BACKSLASH  &kp LEFT_BRACE        &kp RIGHT_BRACE        &trans    &kp PERCENT
+&kp AT_SIGN  &kp SEMICOLON      &kp DOLLAR       &kp LESS_THAN     &kp GREATER_THAN  &trans              &kp ESCAPE       &kp HASH       &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp PIPE  &kp EQUAL
+&trans       &kp ASTERISK       &kp COLON        &kp CARET         &kp GRAVE         &kp LEFT_BRACE      &kp RIGHT_BRACE  &kp AMPERSAND  &kp LEFT_BRACKET      &kp RIGHT_BRACKET      &trans    &kp SLASH
+&trans       &trans             &kp LS(LCTRL)    &kp LS(LEFT_ALT)  &kp LS(LEFT_GUI)  &trans              &trans           &trans                                                                &trans
             >;
-
-            sensor-bindings = <&scroll_up_down>;
+            sensor-bindings = <&inc_dec_kp C_VOLUME_DOWN C_VOLUME_UP>;
         };
 
-        MOUSE {
+        FUNC_SCROLL_WIN {
             bindings = <
-&trans  &trans  &trans  &trans  &trans                    &trans  &trans    &trans    &trans    &trans
-&trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &mkp MB1  &mkp MB3  &mkp MB2  &trans
-&trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans    &trans    &trans    &trans
-&trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans                                &trans
+&kp F12  &kp F7      &kp F8  &kp F9  &trans                                           &none         &kp LC(PAGE_UP)  &kp LC(PAGE_DOWN)  &trans         &kp LS(LG(S))
+&kp F11  &kp F4      &kp F5  &kp F6  &trans  &trans                &kp ESCAPE         &kp LA(LEFT)  &kp LS(LC(TAB))  &kp LC(TAB)        &kp LA(RIGHT)  &trans
+&kp F10  &kp LC(F1)  &kp F2  &kp F3  &trans  &kp LEFT_BRACKET      &kp RIGHT_BRACKET  &trans        &trans           &trans             &trans         &trans
+&trans   &trans      &trans  &trans  &trans  &trans                &trans             &trans                                                           &trans
             >;
+            sensor-bindings = <&encoder_msc_up_down>;
+        };
 
-            sensor-bindings = <&scroll_up_down>;
+        FUNC_SCROLL_MAC {
+            bindings = <
+&kp F12  &kp F7      &kp F8  &kp F9  &trans                                           &none         &kp LG(PAGE_UP)  &kp LG(PAGE_DOWN)  &none          &kp LS(LG(NUMBER_4))
+&kp F11  &kp F4      &kp F5  &kp F6  &trans  &trans                &kp ESCAPE         &kp LG(LEFT)  &kp LS(LC(TAB))  &kp LC(TAB)        &kp LG(RIGHT)  &trans
+&kp F10  &kp LG(F1)  &kp F2  &kp F3  &trans  &kp LEFT_BRACKET      &kp RIGHT_BRACKET  &trans        &trans           &trans             &trans         &trans
+&trans   &trans      &trans  &trans  &trans  &trans                &trans             &trans                                                           &trans
+            >;
+            sensor-bindings = <&inc_dec_kp LG(PLUS) LG(MINUS)>;
+        };
+
+        AML {
+            bindings = <
+&trans  &trans  &trans  &trans  &trans                      &trans  &trans    &trans    &trans    &trans
+&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &mkp MB1  &mkp MB3  &mkp MB2  &trans
+&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans    &trans    &trans    &trans
+&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans                                &trans
+            >;
+        };
+
+        KBD_SETTING {
+            bindings = <
+&trans          &trans  &trans  &trans  &trans                                &kp C_BRIGHTNESS_DEC  &kp C_BRIGHTNESS_INC  &kp K_MUTE  &kp C_VOLUME_DOWN  &kp C_VOLUME_UP
+&trans          &trans  &trans  &trans  &trans  &bootloader      &bootloader  &bt0_win              &bt1_mac              &bt BT_SEL 2   &bt BT_SEL 3        &bt BT_SEL 4
+&bt BT_CLR_ALL  &trans  &trans  &trans  &trans  &trans           &trans       &trans                &trans                &trans      &trans             &bt BT_CLR
+&trans          &trans  &trans  &trans  &trans  &trans           &trans       &trans                                                                     &trans
+            >;
         };
     };
 };
