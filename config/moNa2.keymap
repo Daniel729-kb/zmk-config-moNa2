@@ -114,6 +114,30 @@
             label = "BT1";
         };
 
+        bt2_iPad: bt2_iPad {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings =
+                <&tog_off 1>,
+                <&macro_wait_time 200>,
+                <&bt BT_SEL 2 &bt BT_DISC 0 &bt BT_DISC 1 &bt BT_DISC 3 &bt BT_DISC 4>,
+                <&macro_wait_time 500>,
+                <&tog_on 1>;
+            label = "BT2_IPAD";
+        };
+
+        bt3_iPhone: bt3_iPhone {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings =
+                <&tog_off 1>,
+                <&macro_wait_time 200>,
+                <&bt BT_SEL 3 &bt BT_DISC 0 &bt BT_DISC 1 &bt BT_DISC 2 &bt BT_DISC 4>,
+                <&macro_wait_time 500>,
+                <&tog_on 1>;
+            label = "BT3_IPHONE";
+        };
+
         // AML exit macros
         exit_AML: exit_AML {
             compatible = "zmk,behavior-macro";
@@ -131,6 +155,33 @@
             #binding-cells = <1>;
             bindings = <&macro_param_1to1 &kp MACRO_PLACEHOLDER &exit_AML>;
             label = "KP_exit_AML";
+        };
+
+        // AML scroll layer macros
+        to_scroll_layer_win: to_scroll_layer_win {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings =
+                <&to FUNC_SCROLL_WIN>,
+                <&macro_press>,
+                <&mo FUNC_SCROLL_WIN>,
+                <&macro_pause_for_release>,
+                <&macro_release>,
+                <&mo FUNC_SCROLL_WIN>;
+            label = "TO_SCROLL_LAYER_WIN";
+        };
+
+        to_scroll_layer_mac: to_scroll_layer_mac {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings =
+                <&to FUNC_SCROLL_MAC>,
+                <&macro_press>,
+                <&mo FUNC_SCROLL_MAC>,
+                <&macro_pause_for_release>,
+                <&macro_release>,
+                <&mo FUNC_SCROLL_MAC>;
+            label = "TO_SCROLL_LAYER_MAC";
         };
     };
 
@@ -171,6 +222,14 @@
             tap-ms = <20>;
         };
 
+        encoder_msc_down_up: encoder_msc_down_up {
+            compatible = "zmk,behavior-sensor-rotate";
+            label = "ENCODER_MSC_DOWN_UP";
+            #sensor-binding-cells = <0>;
+            bindings = <&msc SCRL_DOWN>, <&msc SCRL_UP>;
+            tap-ms = <20>;
+        };
+
         // Space and shift behavior
         sands: space_and_shift {
             compatible = "zmk,behavior-hold-tap";
@@ -182,6 +241,26 @@
             global-quick-tap;
             bindings = <&kp>, <&kp>;
         };
+
+        // Layer tap behaviors
+        lt_to_layer_0: lt_to_layer_0 {
+            compatible = "zmk,behavior-hold-tap";
+            label = "LAYER_TAP_TO_0";
+            bindings = <&mo>, <&to>;
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+        };
+
+        // Sticky layer with space
+        space_sl2: space_sl2 {
+            compatible = "zmk,behavior-hold-tap";
+            label = "SPACE_STICKY_LAYER_2";
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            quick-tap-ms = <0>;
+            flavor = "tap-preferred";
+            bindings = <&sl>, <&kp>;
+        };
     };
 
     keymap {
@@ -192,9 +271,9 @@
 &kp Q             &kp W         &kp E      &kp R                   &kp T                                                                            &kp Y                      &kp U  &lt FUNC_SCROLL_WIN I  &kp O    &kp P
 &mt LCTRL A       &mt LCTRL S   &kp D      &kp F                   &kp G                     &kp LG(LS(S))                       &kp EQUAL          &kp H                      &kp J  &kp K                  &kp L    &kp MINUS
 &mt LEFT_SHIFT Z  &kp X         &kp C      &kp V                   &kp B                     &kp AT                              &kp SEMI           &kp N                      &kp M  &kp COMMA              &kp DOT  &kp SLASH
-&kp LALT          &kp LEFT_GUI  &kp LCTRL  &lt KBD_SETTING ESCAPE  &sands LSHIFT SPACE       &lt SYMBOL_WIN CAPS                 &lt NUM_WIN SPACE  &lt FUNC_SCROLL_WIN ENTER                                         &kp DEL
+&kp LALT          &kp LEFT_GUI  &kp LCTRL  &lt KBD_SETTING ESCAPE  &space_sl2 NUM_WIN SPACE  &lt_to_layer_0 SYMBOL_WIN CAPS      &lt NUM_WIN SPACE  &lt FUNC_SCROLL_WIN ENTER                                         &kp DEL
             >;
-            sensor-bindings = <&encoder_msc_up_down>;
+            sensor-bindings = <&encoder_msc_down_up>;
         };
 
         DEFAULT_MAC {
@@ -202,9 +281,9 @@
 &kp Q             &kp W        &kp E         &kp R                   &kp T                                                                            &kp Y                      &kp U  &lt FUNC_SCROLL_MAC I  &kp O    &kp P
 &mt LCTRL A       &mt LCTRL S  &kp D         &kp F                   &kp G                     &kp LG(LS(S))                       &kp EQUAL          &kp H                      &kp J  &kp K                  &kp L    &kp MINUS
 &mt LEFT_SHIFT Z  &kp X        &kp C         &kp V                   &kp B                     &kp AT                              &kp SEMI           &kp N                      &kp M  &kp COMMA              &kp DOT  &kp SLASH
-&kp LCTRL         &kp LALT     &kp LEFT_GUI  &lt KBD_SETTING ESCAPE  &sands LSHIFT SPACE       &lt SYMBOL_MAC CAPS                 &lt NUM_MAC SPACE  &lt FUNC_SCROLL_MAC ENTER                                         &mt RIGHT_SHIFT DELETE
+&kp LCTRL         &kp LALT     &kp LEFT_GUI  &lt KBD_SETTING ESCAPE  &space_sl2 NUM_MAC SPACE  &lt_to_layer_0 SYMBOL_MAC CAPS      &lt NUM_MAC SPACE  &lt FUNC_SCROLL_MAC ENTER                                         &mt RIGHT_SHIFT DELETE
             >;
-            sensor-bindings = <&encoder_msc_up_down>;
+            sensor-bindings = <&encoder_msc_down_up>;
         };
 
         NUM_WIN {
@@ -214,7 +293,7 @@
 &kp F11       &kp F12       &trans        &trans        &trans     &trans      &trans  &trans        &trans        &kp COLON  &kp DQT       &kp UP_ARROW
 &trans        &trans        &trans        &trans        &trans     &trans      &trans  &trans                                               &kp DOWN_ARROW
             >;
-            sensor-bindings = <&encoder_msc_up_down>;
+            sensor-bindings = <&encoder_msc_down_up>;
         };
 
         NUM_MAC {
@@ -234,7 +313,7 @@
 &trans       &kp ASTERISK       &kp COLON         &kp CARET         &kp GRAVE         &kp LEFT_BRACE      &kp RIGHT_BRACE  &kp AMPERSAND  &kp LEFT_BRACKET      &kp RIGHT_BRACKET      &trans    &kp SLASH
 &trans       &trans             &kp LS(LEFT_GUI)  &kp LS(LEFT_ALT)  &kp LS(LCTRL)     &trans              &trans           &trans                                                                &trans
             >;
-            sensor-bindings = <&encoder_msc_up_down>;
+            sensor-bindings = <&encoder_msc_down_up>;
         };
 
         SYMBOL_MAC {
@@ -254,7 +333,7 @@
 &kp F10  &kp LC(F1)  &kp F2  &kp F3  &trans  &kp LEFT_BRACKET      &kp RIGHT_BRACKET  &trans        &trans           &trans             &trans         &trans
 &trans   &trans      &trans  &trans  &trans  &trans                &trans             &trans                                                           &trans
             >;
-            sensor-bindings = <&encoder_msc_up_down>;
+            sensor-bindings = <&encoder_msc_down_up>;
         };
 
         FUNC_SCROLL_MAC {
@@ -278,10 +357,10 @@
 
         KBD_SETTING {
             bindings = <
-&trans          &trans  &trans  &trans  &trans                                &kp C_BRIGHTNESS_DEC  &kp C_BRIGHTNESS_INC  &kp K_MUTE  &kp C_VOLUME_DOWN  &kp C_VOLUME_UP
-&trans          &trans  &trans  &trans  &trans  &bootloader      &bootloader  &bt0_win              &bt1_mac              &bt BT_SEL 2   &bt BT_SEL 3        &bt BT_SEL 4
-&bt BT_CLR_ALL  &trans  &trans  &trans  &trans  &trans           &trans       &trans                &trans                &trans      &trans             &bt BT_CLR
-&trans          &trans  &trans  &trans  &trans  &trans           &trans       &trans                                                                     &trans
+&trans          &trans  &trans  &trans  &trans                                &kp C_BRIGHTNESS_DEC  &kp C_BRIGHTNESS_INC  &kp K_MUTE     &kp C_VOLUME_DOWN  &kp C_VOLUME_UP
+&trans          &trans  &trans  &trans  &trans  &bootloader      &bootloader  &bt0_win              &bt1_mac              &bt2_iPad      &bt3_iPhone        &bt BT_SEL 4
+&bt BT_CLR_ALL  &trans  &trans  &trans  &trans  &trans           &trans       &trans                &trans                &trans         &trans             &bt BT_CLR
+&trans          &trans  &trans  &trans  &trans  &trans           &trans       &trans                                                                         &trans
             >;
         };
     };
