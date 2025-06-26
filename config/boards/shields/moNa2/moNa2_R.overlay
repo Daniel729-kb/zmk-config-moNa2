@@ -1,5 +1,12 @@
 #include "moNa2.dtsi"
 #include <input/processors.dtsi>
+#include <dt-bindings/zmk/input_transform.h>
+
+#define SYMBOL_WIN 4
+#define SYMBOL_MAC 5
+#define FUNC_SCROLL_WIN 6
+#define FUNC_SCROLL_MAC 7
+#define AML 8
 
 &default_transform {
     col-offset = <6>;
@@ -16,17 +23,70 @@
 };
 
 / {
+    // Auto-Mouse Layer Input Processor - Enhanced configuration from roBa
     /omit-if-no-ref/ zip_temp_layer: zip_temp_layer {
         compatible = "zmk,input-processor-temp-layer";
         #input-processor-cells = <2>;
-        excluded-positions = <6 7 8 9 18 19 20 30>;
+        // Excluded positions - moNa2 specific key positions
+        excluded-positions = <
+            18 // J key
+            19 // K key  
+            20 // L key
+            32 // Ctrl/Command + .
+            33 // Shift + /
+            38 // Ctrl/Command + Del
+            39 // Shift + Space
+        >;
+        // Prevent AML activation for 200ms after key input
+        require-prior-idle-ms = <200>;
     };
 
-trackball_listener {
-    compatible = "zmk,input-listener";
-    device = <&trackball>;
-    // input-processors = <&zip_temp_layer 5 10000>;
-};
+    trackball_listener {
+        compatible = "zmk,input-listener";
+        device = <&trackball>;
+        // Auto-Mouse Layer setup - enhanced from roBa
+        input-processors = <&zip_temp_layer AML 30000>;
+
+        // Advanced scrolling behaviors copied from roBa
+
+        // Vertical scrolling for Mac
+        scroller_mac_vertical {
+            layers = <FUNC_SCROLL_MAC>;
+            input-processors =
+                <&zip_y_scaler 1 8>,
+                <&zip_x_scaler 0 1>,
+                <&zip_xy_transform INPUT_TRANSFORM_Y_INVERT>,
+                <&zip_xy_to_scroll_mapper>;
+        };
+
+        // Horizontal scrolling for Mac
+        scroller_mac_horizontal {
+            layers = <SYMBOL_MAC>;
+            input-processors =
+                <&zip_x_scaler 1 8>,
+                <&zip_y_scaler 0 1>,
+                <&zip_xy_to_scroll_mapper>;
+        };
+
+        // Vertical scrolling for Windows
+        scroller_win_vertical {
+            layers = <FUNC_SCROLL_WIN>;
+            input-processors =
+                <&zip_y_scaler 1 8>,
+                <&zip_x_scaler 0 1>,
+                <&zip_xy_to_scroll_mapper>;
+        };
+
+        // Horizontal scrolling for Windows
+        scroller_win_horizontal {
+            layers = <SYMBOL_WIN>;
+            input-processors =
+                <&zip_x_scaler 1 8>,
+                <&zip_y_scaler 0 1>,
+                <&zip_xy_transform INPUT_TRANSFORM_X_INVERT>,
+                <&zip_xy_to_scroll_mapper>;
+        };
+    };
 };
 
 &pinctrl {
@@ -48,6 +108,8 @@ trackball_listener {
     };
 };
 
+&xiao_serial { status = "disabled"; };
+
 &spi0 {
     status = "okay";
     compatible = "nordic,nrf-spim";
@@ -62,6 +124,5 @@ trackball_listener {
         reg = <0>;
         spi-max-frequency = <2000000>;
         irq-gpios = <&gpio0 2 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-        scroll-layers = <6>;
     };
 };
