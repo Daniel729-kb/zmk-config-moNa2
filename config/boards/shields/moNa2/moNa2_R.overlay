@@ -33,15 +33,16 @@
     /omit-if-no-ref/ zip_temp_layer: zip_temp_layer {
         compatible = "zmk,input-processor-temp-layer";
         #input-processor-cells = <2>;
-        excluded-positions = 
-            18
-            19
-            20
-            32
-            33
-            38
-            39
+         excluded-positions = <
+            18 // J
+            19 // K
+            20 // L
+            32 // Ctrl/Command + .
+            33 // Shift + /
+            38 // Ctrl/Command + Del
+            39 // Shift + Space
         >;
+        // キー入力から200ms間はAMLを発動しない
         require-prior-idle-ms = <200>;
     };
 
