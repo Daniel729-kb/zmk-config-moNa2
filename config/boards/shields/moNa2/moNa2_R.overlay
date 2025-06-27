@@ -25,10 +25,15 @@
         compatible = "zmk,input-processor-temp-layer";
         #input-processor-cells = <2>;
         // Excluded positions - keys that won't exit mouse layer
-        excluded-positions = <
-            18 // J key position (adjust based on your layout)
-            19 // K key position  
-            20 // L key position
+        excluded-positions = 
+            18 // J
+            19 // K
+            20 // L
+            32 // Ctrl/Command + .
+            33 // Shift + /
+            38 // Ctrl/Command + Del
+            39 // Shift + Space
+>;
         >;
         // Prevent AML activation for 200ms after key input
         require-prior-idle-ms = <200>;
