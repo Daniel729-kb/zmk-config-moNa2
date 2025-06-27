@@ -1,9 +1,5 @@
 #include "moNa2_L.keymap"
 
-#include "boards/shields/moNa2/moNa2_R.overlay"
-
-#define AML 8
-
 &trackball {
     // Trackball-specific behaviors for different layers
     
@@ -25,10 +21,10 @@
     volume {
         layers = <KBD_SETTING>;
         bindings =
-                <&kp C_VOLUME_UP>,
-                <&kp C_VOLUME_DOWN>,
-                <&kp C_BRIGHTNESS_INC>,
-                <&kp C_BRIGHTNESS_DEC>;
+            <&kp C_VOLUME_UP>,
+            <&kp C_VOLUME_DOWN>,
+            <&kp C_BRIGHTNESS_INC>,
+            <&kp C_BRIGHTNESS_DEC>;
 
         wait-ms = <5>;
         tap-ms = <5>;

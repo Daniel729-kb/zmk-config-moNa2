@@ -2,8 +2,17 @@
 #include <input/processors.dtsi>
 #include <dt-bindings/zmk/input_transform.h>
 
-#define SCROLL_LAYER 5
-#define MOUSE_LAYER 6
+// Define all layer constants
+#define DEFAULT_WIN 0
+#define DEFAULT_MAC 1
+#define NUM_WIN 2
+#define NUM_MAC 3
+#define SYMBOL_WIN 4
+#define SYMBOL_MAC 5
+#define FUNC_SCROLL_WIN 6
+#define FUNC_SCROLL_MAC 7
+#define AML 8
+#define KBD_SETTING 9
 
 &default_transform {
     col-offset = <6>;
@@ -33,7 +42,6 @@
             33 // Shift + /
             38 // Ctrl/Command + Del
             39 // Shift + Space
->;
         >;
         // Prevent AML activation for 200ms after key input
         require-prior-idle-ms = <200>;
@@ -43,24 +51,44 @@
         compatible = "zmk,input-listener";
         device = <&trackball>;
         // Auto-Mouse Layer setup
-        input-processors = <&zip_temp_layer MOUSE_LAYER 1200>;
+        input-processors = <&zip_temp_layer AML 1200>;
 
-       // Add separated vertical/horizontal scroll configurations
-        scroller_vertical {
-        layers = <FUNC_SCROLL_WIN FUNC_SCROLL_MAC>;
-        input-processors =
-        <&zip_y_scaler 1 8>,
-        <&zip_x_scaler 0 1>,
-        <&zip_xy_to_scroll_mapper>;
-};
+        // Vertical scrolling for Windows
+        scroller_win_vertical {
+            layers = <FUNC_SCROLL_WIN>;
+            input-processors =
+                <&zip_y_scaler 1 8>,
+                <&zip_x_scaler 0 1>,
+                <&zip_xy_to_scroll_mapper>;
+        };
 
-        scroller_horizontal {
-         layers = <SYMBOL_WIN SYMBOL_MAC>;
-        input-processors =
-        <&zip_x_scaler 1 8>,
-        <&zip_y_scaler 0 1>,
-        <&zip_xy_to_scroll_mapper>;
-};
+        // Horizontal scrolling for Windows
+        scroller_win_horizontal {
+            layers = <SYMBOL_WIN>;
+            input-processors =
+                <&zip_x_scaler 1 8>,
+                <&zip_y_scaler 0 1>,
+                <&zip_xy_transform INPUT_TRANSFORM_X_INVERT>,
+                <&zip_xy_to_scroll_mapper>;
+        };
+
+        // Vertical scrolling for Mac
+        scroller_mac_vertical {
+            layers = <FUNC_SCROLL_MAC>;
+            input-processors =
+                <&zip_y_scaler 1 8>,
+                <&zip_x_scaler 0 1>,
+                <&zip_xy_transform INPUT_TRANSFORM_Y_INVERT>,
+                <&zip_xy_to_scroll_mapper>;
+        };
+
+        // Horizontal scrolling for Mac
+        scroller_mac_horizontal {
+            layers = <SYMBOL_MAC>;
+            input-processors =
+                <&zip_x_scaler 1 8>,
+                <&zip_y_scaler 0 1>,
+                <&zip_xy_to_scroll_mapper>;
         };
     };
 };
@@ -83,6 +111,8 @@
         };
     };
 };
+
+&xiao_serial { status = "disabled"; };
 
 &spi0 {
     status = "okay";
